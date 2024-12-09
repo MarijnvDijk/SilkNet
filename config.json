@@ -1,9 +1,0 @@
-{
-    "sources": [
-        {
-            "logtype": "drakvuf",
-            "location": "local",
-            "logdirectory": "logs"
-        }
-    ]
-}

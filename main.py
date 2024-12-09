@@ -74,9 +74,9 @@ def parse_config(filename) -> dict:
 
 def print_results(type, detections, netnum):
     if len(detections) == 0:
-        print("[+] Drakvuf Result : Clean")
+        print(f"[+] {type.capitalize()} Result : Clean")
     else:
-        print(f"[-] Drakvuf Result : Malicious [1/{netnum}]")
+        print(f"[-] {type.capitalize()} Result : Malicious [1/{netnum}]")
         for detection in detections:
             print(f"\t\\_ {detection['name']}")
 
