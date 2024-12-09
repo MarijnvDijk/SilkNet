@@ -1,0 +1,39 @@
+{
+    "name": "Early Cascade Injection # 01",
+    "transitions": [
+        {
+            "order": 0,
+            "entity": "PID",
+            "NTAPI": "NtCreateThreadEx",
+            "Args": [
+                {
+                    "key": "CreateFlags",
+                    "value": "0x11"
+                },
+                {
+                    "key": "DesiredAccess",
+                    "value": "0x1fffff"
+                }
+            ]
+        },
+        {
+            "order": 1,
+            "entity": "child",
+            "NTAPI": "NtQueueApcThread",
+            "Args": [
+                {
+                    "key": "ApcArgument1",
+                    "value": "0x0"
+                },
+                {
+                    "key": "ApcArgument2",
+                    "value": "0x0"
+                },
+                {
+                    "key": "ApcArgument3",
+                    "value": "0x0"
+                }
+            ]
+        }
+    ]
+}
