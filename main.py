@@ -103,7 +103,7 @@ def main():
                     return
                 elif source['location'] == "local":
                     if options.syscall == None and options.sysret == None:
-                        print("[!] Sycall Log File or Sysret Log File are Required")
+                        print("[!] Sycall Log File or Sysret Log File is Required")
                         parser.print_help()
                         return      
                 drakvufParser = DrakvufParser(source, options.drakvuf_id, netParser.important_ntapis)
