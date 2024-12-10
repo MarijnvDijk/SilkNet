@@ -42,7 +42,7 @@ class DrakvufParser:
         if "location" not in self._drakvuf_config:
             print("[!] Drakvuf config invalid")
             return
-        elif self._drakvuf_config['location'] == "url":
+        elif self._drakvuf_config['location'] == "online":
             if "url" not in self._drakvuf_config or "authentication_required" not in self._drakvuf_config:
                 print("[!] Drakvuf config invalid")
                 return
