@@ -20,6 +20,7 @@ def parse_args() -> OptionParser:
     drakvuf.add_option('--pid', dest='pid', help="PID of process to inspect")
     drakvuf.add_option('-i', '--analysis-id', dest='drakvuf_id', type='string', help='drakvuf analysis ID')
     sysmon = parser.add_option_group('Sysmon')
+    sysmon.add_option('-x', dest='sysmonxml', help='Sysmon XML File')
     sysmon.add_option('--map-pid', dest='rpid', default=99999, help='Drakvuf Sample PID as found in Sysmon Logs')
     return parser
 
@@ -97,6 +98,10 @@ def main():
         print("[!] PID is mandatory")
         parser.print_help()
         return
+    elif options.sysmon == True and options.sysmonxml == None:
+        print("[!] Please specify Sysmon XML filename")
+        parser.print_help()
+        return
     elif options.sysmon == True and options.rpid == 99999:
         print("[!] PID Map required when using sysmon")
         parser.print_help()
@@ -105,7 +110,7 @@ def main():
     netParser = NetParser(options.netsdir, options.pid)
     for source in config['sources']:
         if "logtype" in source and source["logtype"] == "drakvuf":
-            if source['location'] == "url" and options.drakvuf_id == None:
+            if source['location'] == "online" and options.drakvuf_id == None:
                 print("[!] Drakvuf Analysis ID is required when retrieving from Drakvuf GUI")
                 parser.print_help()
                 return

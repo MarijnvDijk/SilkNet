@@ -67,7 +67,7 @@ class DrakvufParser:
         if type not in valid_types:
             print("[!] Invalid drakvuf log type !")
             return {}
-        if self._drakvuf_config['location'] == 'url':
+        if self._drakvuf_config['location'] == 'online':
             self._retrieve_online(type)
         f = open(f"{self._drakvuf_config['logdirectory']}/{name}").readlines()
         related_events = []
