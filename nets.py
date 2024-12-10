@@ -64,12 +64,12 @@ class NetParser:
                             if call['PPID'] == int(self._pid):
                                 call['order'] = transition['order']
                                 relevant_calls.append(call)
-                started_net = True
+                started_net = False
                 lowest_order=0
                 for call in relevant_calls:
                     if call['order'] == 0:
                         started_net = True
-                    if call['order'] == lowest_order+1:
+                    if call['order'] == lowest_order+1 and started_net == True:
                         lowest_order += 1
                 if lowest_order == highest_order and started_net == True:
                     detection_object = {'name': net['name']}
