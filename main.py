@@ -5,11 +5,11 @@ from optparse import OptionParser
 
 from nets import NetParser
 from drakvuf import DrakvufParser
+from sysmon import SysmonParser
 
 def parse_args() -> OptionParser:
     parser = OptionParser(f"Usage: {sys.argv[0]} <Source Type(s)> [Options]")
     source_types = parser.add_option_group('Source Types')
-    source_types.add_option('-d', '--drakvuf', dest='drakvuf', action="store_true", default=False, help='enable drakvuf parsing')
     source_types.add_option('-e', '--silketw', dest='silketw', action="store_true", default=False, help='enable silketw parsing')
     source_types.add_option('-s', '--sysmon', dest='sysmon', action="store_true", default=False, help='enable sysmon parsing')
     parser.add_option('-c', '--config', dest='config', type='string', default='config.json', help='config filename (default: config.json)')
@@ -52,8 +52,10 @@ def generate_config(filename) -> None:
             else:
                 drakvuf['authentication_required'] = False
         config['sources'].append(drakvuf)
-    else:
-        exit(0)
+    if input("\t\t\\_ Add sysmon support? [Y/n] ") in ("Y" or "y" or ""):
+        sysmon = {"logtype":"sysmon"}
+        sysmon['logdirectory'] = demand("\t\t\t\\_ logdirectory ", [])
+        config['sources'].append(sysmon)
     f = open(filename, "w")
     f.write(json.dumps(config))
     f.close()
@@ -90,11 +92,7 @@ def main():
     (options, args) = parser.parse_args()
 
     config = parse_config(options.config)
-    if options.drakvuf == False:
-        print("[!] Drakvuf is manadatory")
-        parser.print_help()
-        return
-    elif options.pid == None:
+    if options.pid == None:
         print("[!] PID is mandatory")
         parser.print_help()
         return
@@ -124,6 +122,9 @@ def main():
                 syscalls = drakvufParser.parse_log(options.syscall, "syscall")
             else:
                 syscalls = drakvufParser.parse_log("syscall.log", "syscall")
+        elif "logtype" in source and source["logtype"] == "sysmon":
+            sysmonParser = SysmonParser(options.rpid, source)
+            sysmonParser.parse_log(options.sysmonxml)
     detections = netParser.check(syscalls, 'drakvuf')
     print_results('drakvuf', detections, netParser.net_num)
 

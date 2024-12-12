@@ -22,16 +22,8 @@
             "NTAPI": "NtQueueApcThread",
             "Args": [
                 {
-                    "key": "ApcArgument1",
-                    "value": "0x0"
-                },
-                {
-                    "key": "ApcArgument2",
-                    "value": "0x0"
-                },
-                {
-                    "key": "ApcArgument3",
-                    "value": "0x0"
+                    "key": "ThreadHandle",
+                    "value": "0xfffffffffffffffe"
                 }
             ]
         }
