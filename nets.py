@@ -56,14 +56,23 @@ class NetParser:
                 for transition in net['transitions']:
                     highest_order=transition['order']
                     for call in behaviour:
+                        valid = True
                         if transition['entity'] == 'PID':
                             if call['PID'] == int(self._pid) and call['Method'] == transition['NTAPI']:
-                                call['order'] = transition['order']
-                                relevant_calls.append(call)
+                                for arg in transition['Args']:
+                                    if call[arg['key']] != arg['value']:
+                                        valid = False
+                                if valid == True:
+                                    call['order'] = transition['order']
+                                    relevant_calls.append(call)
                         if transition['entity'] == 'child' and call['Method'] == transition['NTAPI']:
                             if call['PPID'] == int(self._pid):
-                                call['order'] = transition['order']
-                                relevant_calls.append(call)
+                                for arg in transition['Args']:
+                                    if call[arg['key']] != arg['value']:
+                                        valid = False
+                                if valid == True:
+                                    call['order'] = transition['order']
+                                    relevant_calls.append(call)
                 started_net = False
                 lowest_order=0
                 for call in relevant_calls:
