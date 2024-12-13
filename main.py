@@ -122,7 +122,7 @@ def main():
                 syscalls = drakvufParser.parse_log(options.syscall, "syscall")
             else:
                 syscalls = drakvufParser.parse_log("syscall.log", "syscall")
-        elif "logtype" in source and source["logtype"] == "sysmon":
+        elif "logtype" in source and source["logtype"] == "sysmon" and options.sysmon:
             sysmonParser = SysmonParser(options.rpid, source)
             sysmonParser.parse_log(options.sysmonxml)
     detections = netParser.check(syscalls, 'drakvuf')
