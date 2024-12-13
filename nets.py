@@ -102,4 +102,6 @@ class NetParser:
                 if lowest_order == highest_order and started_net == True:
                     detection_object = {'name': net['name']}
                     detection.append(detection_object)
+                    relevant_calls = []
+                    seen_order=[]
         return detection

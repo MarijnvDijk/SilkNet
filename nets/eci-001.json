@@ -36,6 +36,18 @@
         },
         {
             "order": 4,
+            "entity": "PID",
+            "NTAPI": "NtResumeThread",
+            "Args": [
+                {
+                    "key": "PreviousSuspendCount",
+                    "value": "1",
+                    "nz": 1
+                }
+            ]
+        },
+        {
+            "order": 5,
             "entity": "child",
             "NTAPI": "NtQueueApcThread",
             "Args": [
