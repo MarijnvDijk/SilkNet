@@ -36,7 +36,7 @@ def demand(prompt, options) -> str:
 
 def generate_config(filename) -> None:
     config = {"sources":[]}
-    if input("\t\t\\_ Add drakvuf support? [Y/n] ") in ("Y" or "y" or ""):
+    if input("\t\t\\_ Add drakvuf support? [Y/n] ") in ["Y", "y", ""]:
         drakvuf = {"logtype":"drakvuf"}
         drakvuf['logdirectory'] = demand("\t\t\t\\_ logdirectory ", [])
         drakvuf['location'] = demand("\t\t\t\\_ loglocation (\"online\" or \"local\") ", ["online", "local"])
@@ -52,7 +52,7 @@ def generate_config(filename) -> None:
             else:
                 drakvuf['authentication_required'] = False
         config['sources'].append(drakvuf)
-    if input("\t\t\\_ Add sysmon support? [Y/n] ") in ("Y" or "y" or ""):
+    if input("\t\t\\_ Add sysmon support? [Y/n] ") in ["Y", "y", ""]:
         sysmon = {"logtype":"sysmon"}
         sysmon['logdirectory'] = demand("\t\t\t\\_ logdirectory ", [])
         config['sources'].append(sysmon)
