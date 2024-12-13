@@ -18,6 +18,24 @@
         },
         {
             "order": 1,
+            "entity": "PID",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 2,
+            "entity": "PID",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 3,
+            "entity": "PID",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 4,
             "entity": "child",
             "NTAPI": "NtQueueApcThread",
             "Args": [

@@ -52,6 +52,7 @@ class NetParser:
         if type == 'drakvuf':
             detection = []
             relevant_calls = []
+            seen_order=[]
             for net in self._nets:
                 for transition in net['transitions']:
                     highest_order=transition['order']
@@ -62,17 +63,35 @@ class NetParser:
                                 for arg in transition['Args']:
                                     if call[arg['key']] != arg['value']:
                                         valid = False
+                                    if 'nz' in arg and call[arg['key']] != "0x0":
+                                        valid = True
                                 if valid == True:
-                                    call['order'] = transition['order']
+                                    if transition['order'] not in seen_order:
+                                        if 'donttouch' not in call:
+                                            call['order'] = transition['order']
+                                            call['donttouch'] = 1
+                                    else:
+                                        call['order'] = -1
                                     relevant_calls.append(call)
+                                    if call['order'] == transition['order']:
+                                        seen_order.append(transition['order'])
                         if transition['entity'] == 'child' and call['Method'] == transition['NTAPI']:
                             if call['PPID'] == int(self._pid):
                                 for arg in transition['Args']:
                                     if call[arg['key']] != arg['value']:
                                         valid = False
+                                    if 'nz' in arg and call[arg['key']] != "0x0":
+                                        valid = True
                                 if valid == True:
-                                    call['order'] = transition['order']
+                                    if transition['order'] not in seen_order:
+                                        if 'donttouch' not in call:
+                                            call['order'] = transition['order']
+                                            call['donttouch'] = 1
+                                    else:
+                                        call['order'] = -1
                                     relevant_calls.append(call)
+                                    if call['order'] == transition['order']:
+                                        seen_order.append(transition['order'])
                 started_net = False
                 lowest_order=0
                 for call in relevant_calls:
