@@ -1,0 +1,82 @@
+{
+    "name": "Early Cascade Injection # 02",
+    "transitions": [
+        {
+            "order": 0,
+            "entity": "PID",
+            "NTAPI": "NtCreateThreadEx",
+            "Args": [
+                {
+                    "key": "CreateFlags",
+                    "value": "0x11"
+                },
+                {
+                    "key": "DesiredAccess",
+                    "value": "0x1fffff"
+                }
+            ]
+        },
+        {
+            "order": 1,
+            "entity": "PID",
+            "NTAPI": "NtAllocateVirtualMemory",
+            "Args": [
+                 {
+                  "key": "AllocationType",
+                  "value": "0x3000"
+                },
+                {
+                  "key": "Protect",
+                  "value": "0x40"
+                }
+            ]
+        },
+        {
+            "order": 2,
+            "entity": "PID",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 3,
+            "entity": "PID",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 4,
+            "entity": "PID",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 5,
+            "entity": "PID",
+            "NTAPI": "NtResumeThread",
+            "Args": [
+                {
+                    "key": "PreviousSuspendCount",
+                    "value": "0x17244ff998",
+                    "nz": 1
+                }
+            ]
+        },
+        {
+            "order": 6,
+            "entity": "child",
+            "NTAPI": "NtWriteVirtualMemory",
+            "Args": []
+        },
+        {
+            "order": 7,
+            "entity": "child",
+            "NTAPI": "NtQueueApcThread",
+            "Args": [
+                {
+                    "key": "ThreadHandle",
+                    "value": "0xfffffffffffffffe"
+                }
+            ]
+        }
+    ]
+}
