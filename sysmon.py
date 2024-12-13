@@ -43,7 +43,7 @@ class SysmonParser:
         self._config_valid = True
 
     def parse_log(self, name) -> dict:
-        f = open(f'{self._sysmon_config['logdirectory']}/{name}', 'r').read()
+        f = open(f"{self._sysmon_config['logdirectory']}/{name}", 'r').read()
         obj = xmltodict.parse(f)
         process_creation = []
         for event in obj['Events']['Event']:
@@ -52,4 +52,3 @@ class SysmonParser:
         for event in process_creation:
             processInfo = {}
             # for attribute in event['EventData']['Data']:
-                
