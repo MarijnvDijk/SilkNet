@@ -50,48 +50,29 @@ class NetParser:
         if type not in valid_types:
             return None
         if type == 'drakvuf':
-            detection = []
+            detections = []
             for net in self._nets:
                 relevant_calls = []
-                seen_order=[]
+                seen_order = []
+                highest_order = 0
                 for transition in net['transitions']:
-                    highest_order=transition['order']
+                    if transition['order'] > highest_order:
+                        highest_order=transition['order']
                     for call in behaviour:
                         valid = True
-                        if transition['entity'] == 'PID':
-                            if call['PID'] == int(self._pid) and call['Method'] == transition['NTAPI']:
+                        if (transition['entity'] == 'PID' and call['PID'] == int(self._pid)) or (transition['entity'] == 'child' and call['PPID'] == int(self._pid)):
+                            if call['Method'] == transition['NTAPI']:
                                 for arg in transition['Args']:
                                     if call[arg['key']] != arg['value']:
                                         valid = False
                                     if 'nz' in arg and call[arg['key']] != "0x0":
                                         valid = True
                                 if valid == True:
-                                    if transition['order'] not in seen_order:
-                                        if 'donttouch' not in call:
-                                            call['order'] = transition['order']
-                                            call['donttouch'] = 1
-                                    else:
-                                        call['order'] = -1
-                                    relevant_calls.append(call)
-                                    if call['order'] == transition['order']:
+                                    if transition['order'] not in seen_order and 'order' not in call:
                                         seen_order.append(transition['order'])
-                        if transition['entity'] == 'child' and call['Method'] == transition['NTAPI']:
-                            if call['PPID'] == int(self._pid):
-                                for arg in transition['Args']:
-                                    if call[arg['key']] != arg['value']:
-                                        valid = False
-                                    if 'nz' in arg and call[arg['key']] != "0x0":
-                                        valid = True
-                                if valid == True:
-                                    if transition['order'] not in seen_order:
-                                        if 'donttouch' not in call:
-                                            call['order'] = transition['order']
-                                            call['donttouch'] = 1
-                                    else:
-                                        call['order'] = -1
-                                    relevant_calls.append(call)
-                                    if call['order'] == transition['order']:
-                                        seen_order.append(transition['order'])
+                                        call_info = call.copy()
+                                        call_info['order'] = transition['order']
+                                        relevant_calls.append(call_info)
                 started_net = False
                 lowest_order=0
                 for call in relevant_calls:
@@ -100,6 +81,6 @@ class NetParser:
                     if call['order'] == lowest_order+1 and started_net == True:
                         lowest_order += 1
                 if lowest_order == highest_order and started_net == True:
-                    detection_object = {'name': net['name']}
-                    detection.append(detection_object)
-        return detection
+                    detection = {'name': net['name']}
+                    detections.append(detection)
+            return detections
