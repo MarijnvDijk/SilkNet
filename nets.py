@@ -51,9 +51,9 @@ class NetParser:
             return None
         if type == 'drakvuf':
             detection = []
-            relevant_calls = []
-            seen_order=[]
             for net in self._nets:
+                relevant_calls = []
+                seen_order=[]
                 for transition in net['transitions']:
                     highest_order=transition['order']
                     for call in behaviour:
@@ -102,6 +102,4 @@ class NetParser:
                 if lowest_order == highest_order and started_net == True:
                     detection_object = {'name': net['name']}
                     detection.append(detection_object)
-                    relevant_calls = []
-                    seen_order=[]
         return detection
