@@ -87,6 +87,7 @@ def print_results(type, detections, netnum):
         print(f"[-] {type.capitalize()} Result : Malicious [{len(detections)}/{netnum}]")
         for detection in detections:
             print(f"\t\\_ {detection['name']}")
+    print('\n', end="")
 
 def main():
     parser = parse_args()
@@ -129,7 +130,6 @@ def main():
             detections = netParser.check(syscalls, 'drakvuf')
             print_results('drakvuf', detections, netParser.net_num)
         elif "logtype" in source and source["logtype"] == "sysmon" and options.sysmon:
-            print()
             sysmonParser = SysmonParser(options.rpid, source)
             sysmonParser.parse_log(options.sysmonxml)
 
