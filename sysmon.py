@@ -1,7 +1,5 @@
-import os
-import xml.etree.ElementTree as ET
 import xmltodict
-import json
+from prettytable import PrettyTable
 
 class SysmonParser:
     """
@@ -42,13 +40,53 @@ class SysmonParser:
             return
         self._config_valid = True
 
-    def parse_log(self, name) -> dict:
+    def parse_log(self, name):
         f = open(f"{self._sysmon_config['logdirectory']}/{name}", 'r').read()
         obj = xmltodict.parse(f)
-        process_creation = []
+        process_creation_events = []
+        processes = []
         for event in obj['Events']['Event']:
             if event['System']['EventID'] == "1":
-                process_creation.append(event)
-        for event in process_creation:
-            processInfo = {}
-            # for attribute in event['EventData']['Data']:
+                process_creation_events.append(event)
+        for event in process_creation_events:
+            process_creation_info = {}
+            for attribute in event['EventData']['Data']:
+                if attribute['@Name'] in ['ProcessId', 'User', 'CommandLine', 'ParentProcessId', 'Image']:
+                    process_creation_info[attribute['@Name']] = attribute['#text']
+            processes.append(process_creation_info)
+        
+        proctree_order = [[self._map_pid]]
+        pids_seen = [self._map_pid]
+        for proc in processes:
+            if proc['ProcessId'] == self._map_pid:
+                print(proc['Image'])
+        while True:
+            child = False
+            for proc in processes:
+                if proc['ParentProcessId'] in pids_seen and proc['ProcessId'] not in pids_seen:
+                    pids_seen.append(proc['ProcessId'])
+                    proctree_order.append([proc['ParentProcessId'], proc['ProcessId']])
+                    child = True
+            if child == False:
+                break
+        last_pid = self._map_pid
+        indent = 1
+        for group in range(1, len(proctree_order)):
+            if proctree_order[group][0] != last_pid:
+                last_pid = proctree_order[group][0]
+                indent += 1
+            for proc in processes:
+                if proc['ProcessId'] == proctree_order[group][1]:
+                    print(indent * '\t' + '\\_ ' + proc['Image'])
+        print()
+
+        table = PrettyTable()
+        table.field_names = ["ParentProcessId", "ProcessId", "Image", "CommandLine", "User"]
+        rows = []
+        for proc in processes:
+            if proc['ProcessId'] in pids_seen:
+                rows.append([proc['ParentProcessId'], proc['ProcessId'], proc['Image'], proc['CommandLine'], proc['User']])
+        rows.reverse()
+        for row in rows:
+            table.add_row(row)
+        print(table)
