@@ -13,6 +13,7 @@ def parse_args() -> OptionParser:
     source_types.add_option('-e', '--silketw', dest='silketw', action="store_true", default=False, help='enable silketw parsing')
     source_types.add_option('-s', '--sysmon', dest='sysmon', action="store_true", default=False, help='enable sysmon parsing')
     parser.add_option('-c', '--config', dest='config', type='string', default='config.json', help='config filename (default: config.json)')
+    parser.add_option('--regenerate-config', dest='regenerate', action="store_true", default=False, help='regenerate config')
     parser.add_option('-n', '--net-dir', dest='netsdir', type='string', default='nets', help='directory where behavioural nets are stored')
     drakvuf = parser.add_option_group('Drakvuf')
     drakvuf.add_option('--syscall-file', dest='syscall', help='log file containing syscall log')
@@ -91,6 +92,9 @@ def main():
     parser = parse_args()
     (options, args) = parser.parse_args()
 
+    if options.regenerate:
+        generate_config(options.config)
+
     config = parse_config(options.config)
     if options.pid == None:
         print("[!] PID is mandatory")
@@ -122,11 +126,12 @@ def main():
                 syscalls = drakvufParser.parse_log(options.syscall, "syscall")
             else:
                 syscalls = drakvufParser.parse_log("syscall.log", "syscall")
+            detections = netParser.check(syscalls, 'drakvuf')
+            print_results('drakvuf', detections, netParser.net_num)
         elif "logtype" in source and source["logtype"] == "sysmon" and options.sysmon:
+            print()
             sysmonParser = SysmonParser(options.rpid, source)
             sysmonParser.parse_log(options.sysmonxml)
-    detections = netParser.check(syscalls, 'drakvuf')
-    print_results('drakvuf', detections, netParser.net_num)
 
 if __name__ == "__main__":
     main()

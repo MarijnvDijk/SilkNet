@@ -18,36 +18,6 @@
         },
         {
             "order": 1,
-            "entity": "PID",
-            "NTAPI": "NtWriteVirtualMemory",
-            "Args": []
-        },
-        {
-            "order": 2,
-            "entity": "PID",
-            "NTAPI": "NtWriteVirtualMemory",
-            "Args": []
-        },
-        {
-            "order": 3,
-            "entity": "PID",
-            "NTAPI": "NtWriteVirtualMemory",
-            "Args": []
-        },
-        {
-            "order": 4,
-            "entity": "PID",
-            "NTAPI": "NtResumeThread",
-            "Args": [
-                {
-                    "key": "PreviousSuspendCount",
-                    "value": "1",
-                    "nz": 1
-                }
-            ]
-        },
-        {
-            "order": 5,
             "entity": "child",
             "NTAPI": "NtQueueApcThread",
             "Args": [
